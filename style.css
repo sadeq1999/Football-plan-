@@ -1,63 +1,72 @@
+/* ضبط عام للصفحة والمحتوى */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  user-select: none; /* منع تحديد النص أثناء السحب */
 }
 
 body {
-  background-color: #121212;
+  background-color: #121212; /* خلفية الصفحة داكنة */
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  direction: rtl; /* ضبط الاتجاه من اليمين لليسار */
 }
 
-/* خلفية الملعب */
+/* حاوية الملعب وتخطيطه */
 .pitch {
-  width: 380px;
-  height: 580px;
-  background: #1e6b36;
-  border: 4px solid #ffffff;
-  border-radius: 16px;
-  position: relative;
-  overflow: hidden;
-  /* تخطيط خطوط الملعب */
+  width: 380px; /* عرض ثابت مثل الصورة */
+  height: 580px; /* طول ثابت مثل الصورة */
+  background: #2a6a4c; /* لون العشب */
+  border: 4px solid rgba(255, 255, 255, 0.7); /* إطار الملعب الأبيض */
+  border-radius: 12px;
+  position: relative; /* ضروري لوضع اللاعبين بداخلها */
+  overflow: hidden; /* إخفاء أي شيء يخرج عن الإطار */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5); /* ظل الملعب */
+  
+  /* رسم خطوط الملعب (دائرة المنتصف) */
   background-image: 
-    radial-gradient(circle at 50% 50%, transparent 60px, #ffffff 61px, #ffffff 63px, transparent 64px),
-    linear-gradient(to bottom, transparent 49.5%, #ffffff 49.5%, #ffffff 50.5%, transparent 50.5%);
+    radial-gradient(circle at 50% 50%, transparent 69px, rgba(255,255,255,0.7) 70px, rgba(255,255,255,0.7) 72px, transparent 73px),
+    linear-gradient(to right, transparent 49.6%, rgba(255,255,255,0.7) 49.8%, rgba(255,255,255,0.7) 50.2%, transparent 50.4%); /* خط المنتصف الرأسي */
 }
 
-/* كارت اللاعب */
+/* --- تنسيق كارت اللاعب --- */
 .player-card {
   position: absolute;
   width: 90px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 10; /* تأكيد ظهور اللاعبين فوق خطوط الملعب */
   cursor: grab;
-  user-select: none;
 }
 
+/* تصحيح خطأ الصورة المتداخلة: ضبط الطبقات */
 .player-img {
-  width: 75px;
-  height: 75px;
-  object-fit: cover;
-  z-index: 2;
+  width: 70px;
+  height: 70px;
+  object-fit: contain; /* عرض الصورة كاملة */
+  background: transparent;
+  z-index: 12; /* الصورة فوق كل شيء */
+  position: relative;
 }
 
-/* الشريط السفلي للتقييم والمركز */
+/* حاوية التقييم والمركز (الشريط المدمج) */
 .badge-container {
   display: flex;
   width: 80px;
   height: 24px;
-  background-color: #111;
+  background-color: #000000; /* خلفية سوداء للشريط */
   border-radius: 4px;
+  margin-top: -10px; /* دمج الشريط مع الصورة */
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-  margin-top: -8px; /* يدمج الشريط مع صورة اللاعب */
-  z-index: 3;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+  z-index: 11; /* الشريط خلف الصورة ولكن فوق اسم اللاعب */
   position: relative;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 .rating {
@@ -68,7 +77,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #000;
+  background-color: #000; /* خلفية سوداء للتقييم */
 }
 
 .position {
@@ -81,31 +90,48 @@ body {
   justify-content: center;
 }
 
-/* ألوان المراكز */
-.position.cf { background-color: #e63946; }  /* هجوم - أحمر */
-.position.cmf { background-color: #2a9d8f; } /* وسط - أخضر فاتح */
-.position.cb { background-color: #0077b6; }  /* دفاع - أزرق */
-.position.gk { background-color: #f4a261; }  /* حارس - برتقالي */
-
+/* تصحيح الاسم المتداخل: الاسم أسفل الشريط */
 .player-name {
   color: #fff;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: bold;
-  margin-top: 4px;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
-  z-index: 2;
+  margin-top: 5px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+  z-index: 10;
+  text-align: center;
+  white-space: nowrap;
 }
+
+/* ألوان المراكز المحددة */
+.position.cmf { background-color: #3b8a7f; } /* وسط - أخضر فاتح */
+.position.gk { background-color: #e27c3f; } /* حارس - برتقالي */
 
 /* --- أنيميشن النار للتقييم 90+ --- */
-.fire-effect .badge-container {
-  border: 1px solid #ff9d00;
-  box-shadow: 0 0 10px #ff5500, inset 0 0 5px #ff5500;
-}
-
 .fire-effect .fire-animation {
   position: absolute;
-  top: 55px;
+  top: 52px; /* تعديل الارتفاع ليناسب الشريط */
   left: 6px;
+  width: 42px;
+  height: 42px;
+  background: radial-gradient(circle, rgba(255,215,0,0.9) 0%, rgba(255,69,0,0.6) 40%, transparent 65%);
+  border-radius: 50%;
+  z-index: 15; /* النار تظهر فوق التقييم */
+  pointer-events: none; /* لا تتداخل مع سحب البطاقة */
+  animation: burn 1.0s infinite alternate ease-in-out;
+  filter: blur(2px);
+}
+
+@keyframes burn {
+  0% { transform: scale(0.95); opacity: 0.8; filter: drop-shadow(0 0 5px #ff4500) blur(2px); }
+  100% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 15px #ff8c00) blur(1px); }
+}
+
+/* تنسيقات إضافية لضمان عمل السحب (Drag & Drop) برمجياً */
+.dragging {
+  opacity: 0.6;
+  cursor: grabbing;
+  z-index: 100;
+}
   width: 42px;
   height: 42px;
   background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(255,69,0,0.5) 50%, transparent 70%);
